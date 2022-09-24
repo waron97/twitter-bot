@@ -19,6 +19,7 @@ services:
       - MONGO_CONTAINER_NAME=twitter-api-db
       - LOGS_APP_ID=twitter-bot
       - APP_PORT=8080
+      - API_KEY=${LOGS_API_KEY}
     command: "yarn run dev"
   
   mongo:

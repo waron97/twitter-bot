@@ -12,6 +12,7 @@ const appEnv = {
   mongoContainerName: requireProcessEnv('MONGO_CONTAINER_NAME'),
   mongoDbName: requireProcessEnv('MONGO_DB_NAME'),
   port: requireProcessEnv('APP_PORT'),
+  apiKey: requireProcessEnv('API_KEY'),
 };
 
 export default appEnv;
