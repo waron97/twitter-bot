@@ -15,6 +15,7 @@ export const index: RequestHandler = async (req, res, next) => {
       return Log.find(filters)
         .skip(skip)
         .limit(limit)
+        .sort({ date: 'desc' })
         .then(paginated(res, { page, pageSize, size }));
     });
 };
