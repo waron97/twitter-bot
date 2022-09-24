@@ -3,8 +3,10 @@ import * as dayjs from 'dayjs';
 import * as qs from 'qs';
 
 import FetchInstruction, {
+  FetchInstructionDocument,
   IFetchInstruction,
 } from '../../api/tweet-fetch-instructions/model';
+import Tweet from '../../api/tweets/model';
 import appEnv from '../../constants/env';
 import Logger from '../logs';
 import { accounts } from './constants';
@@ -17,10 +19,10 @@ interface TwitterParams {
   next_token?: string;
 }
 
-type Tweet = { created_at: string; id: string; text: string };
+type ApiTweet = { created_at: string; id: string; text: string };
 
 type TwitterResponse = {
-  data?: Tweet[];
+  data?: ApiTweet[];
   meta: {
     newest_id?: string;
     oldest_id?: string;
@@ -48,35 +50,13 @@ export const getRecentTweets = async () => {
     lastFetchedTweet
   );
 
-  const queryParams: TwitterParams = {
-    'tweet.fields': 'created_at',
-    query:
-      accounts.map((a) => `from:${a}`).join(' OR ') +
-      ' -is:reply -is:retweet -is:quote',
-  };
-
-  if (lastFetchedTweet) {
-    queryParams.since_id = lastFetchedTweet.tweetId;
-  } else {
-    queryParams.start_time = dayjs().subtract(5, 'day').toISOString();
-  }
-
   let nextToken: string | undefined;
-  const items: Tweet[] = [];
+  const items: ApiTweet[] = [];
 
   let response: TwitterResponse;
 
-  const requestParams = {
-    url: `https://api.twitter.com/2/tweets/search/recent?${qs.stringify(
-      queryParams
-    )}`,
-    headers: {
-      authorization: `Bearer ${appEnv.twitterToken}`,
-    },
-  };
-
   try {
-    const { data }: { data: TwitterResponse } = await axios(requestParams);
+    const data = await getTweetList(lastFetchedTweet);
 
     response = {
       meta: data?.meta,
@@ -87,11 +67,8 @@ export const getRecentTweets = async () => {
       'Twitter responded to first page fetch',
       response
     );
-  } catch (e) {
-    Logger.error('getRecentTweets', `First page fetch failed: ${e.message}`, {
-      response: e?.response?.data,
-      request: requestParams,
-    });
+  } catch {
+    // error already logged
     return;
   }
 
@@ -99,26 +76,13 @@ export const getRecentTweets = async () => {
   nextToken = response.meta.next_token;
 
   while (nextToken) {
-    const nextPageRequestParams = {
-      url: 'https://api.twitter.com/2/tweets/search/recent',
-      params: qs.stringify({ ...queryParams, next_token: nextToken }),
-      headers: {
-        authorization: `Bearer ${appEnv.twitterToken}`,
-      },
-    };
     try {
-      queryParams.next_token = nextToken;
-      const { data: nextPageData }: { data: TwitterResponse } = await axios(
-        nextPageRequestParams
-      );
+      const nextPageData = await getTweetList(lastFetchedTweet, nextToken);
       nextPageData?.data?.forEach((tweet) => items.push(tweet));
       nextToken = nextPageData.meta.next_token;
-    } catch (e) {
-      Logger.error(
-        'getRecentTweets',
-        `Subsequent page fetch failed: ${e.message}`,
-        { response: e?.response?.data, request: nextPageRequestParams }
-      );
+    } catch {
+      // error already logged
+      return;
     }
   }
 
@@ -139,4 +103,120 @@ export const getRecentTweets = async () => {
   }
 
   Logger.info('getRecentTweets', `Finished execution`);
+};
+
+export const executeTweetFetch = async () => {
+  await FetchInstruction.find({ done: false })
+    .cursor()
+    .eachAsync(async (instruction) => {
+      const { fetchDate, tweetId } = instruction;
+
+      const canFetch = dayjs().isAfter(dayjs(fetchDate).add(1, 'day'));
+
+      if (!canFetch) {
+        return;
+      }
+
+      let tweetDetail;
+
+      try {
+        tweetDetail = await getTweetDetail(tweetId);
+      } catch {
+        // error already handler
+        return;
+      }
+
+      Logger.debug(
+        'executeTweetFetch',
+        `Downloaded tweet detail for ${tweetId}`,
+        tweetDetail
+      );
+      const tweetBody = {
+        authorId: tweetDetail?.author_id,
+        tweetId: tweetDetail?.id,
+        createdAt: tweetDetail?.created_at,
+        fetchedAt: Date.now(),
+        data: tweetDetail,
+      };
+
+      try {
+        await Tweet.create(tweetBody);
+        await Object.assign(instruction, { done: true }).save();
+      } catch (e) {
+        Logger.error(
+          'executeTweetFetch',
+          `Failed to register data for tweet ${tweetId}`,
+          { error: e, body: tweetBody }
+        );
+      }
+    });
+};
+
+const getTweetList: (
+  lastFetchedTweet?: FetchInstructionDocument,
+  nextToken?: string
+) => Promise<TwitterResponse> = async (lastFetchedTweet, nextToken) => {
+  const query: TwitterParams = {
+    'tweet.fields': 'created_at',
+    query:
+      accounts.map((a) => `from:${a}`).join(' OR ') +
+      ' -is:reply -is:retweet -is:quote',
+  };
+
+  if (lastFetchedTweet) {
+    query.since_id = lastFetchedTweet.tweetId;
+  } else {
+    query.start_time = dayjs().subtract(5, 'day').toISOString();
+  }
+
+  if (nextToken) {
+    query.next_token = nextToken;
+  }
+
+  const requestParams = {
+    url: `https://api.twitter.com/2/tweets/search/recent?${qs.stringify(
+      query
+    )}`,
+    headers: {
+      authorization: `Bearer ${appEnv.twitterToken}`,
+    },
+  };
+
+  try {
+    const { data } = await axios(requestParams);
+    return data;
+  } catch (e) {
+    Logger.error('getTweetList', 'Failed to download tweet list', {
+      request: requestParams,
+      error: e,
+      response: e?.response?.data,
+    });
+    throw e;
+  }
+};
+
+const getTweetDetail = async (tweetId) => {
+  const query = {
+    'tweet.fields':
+      'text,author_id,created_at,public_metrics,referenced_tweets,source,in_reply_to_user_id,entities,context_annotations,conversation_id',
+    'media.fields': 'type,url,public_metrics,alt_text',
+  };
+  const requestParams = {
+    url: `https://api.twitter.com/2/tweets/${tweetId}?${qs.stringify(query)}`,
+    headers: {
+      Authorization: `Bearer ${appEnv.twitterToken}`,
+    },
+  };
+
+  try {
+    const { data } = await axios(requestParams);
+    return data?.data;
+  } catch (e) {
+    Logger.error('getTweetDetail', 'Failed to get tweet detail', {
+      error: e,
+      request: requestParams,
+      response: e?.response?.data,
+    });
+    throw e;
+  }
 };
