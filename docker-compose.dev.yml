@@ -28,6 +28,9 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    command: "--quiet --logpath=/dev/null"
+    volumes:
+      - ./mongodata:/data/db:rw
 
 networks:
   app_network:
