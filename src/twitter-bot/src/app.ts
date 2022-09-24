@@ -17,6 +17,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(appRouter);
+app.use(express.static('static'));
 
 app.listen(appEnv.port, () => {
   // eslint-disable-next-line

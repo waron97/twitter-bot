@@ -15,6 +15,7 @@ export const paginated =
         page,
         pageSize,
         maxPages: Math.ceil(size / pageSize),
+        resultCount: size,
       },
     });
   };
