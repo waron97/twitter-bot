@@ -16,6 +16,7 @@ services:
       - MONGO_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
       - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_DB_NAME=logs-db-dev
+      - MONGO_CONTAINER_NAME=twitter-api-db
       - LOGS_APP_ID=twitter-bot
       - APP_PORT=8080
     command: "yarn run dev"
@@ -25,9 +26,11 @@ services:
     container_name: twitter-api-db
     ports:
       - "27017:27017"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    networks:
+      - app_network
+    # environment:
+      # - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+      # - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
     command: "--quiet --logpath=/dev/null"
     volumes:
       - ./mongodata:/data/db:rw
