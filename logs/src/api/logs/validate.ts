@@ -8,6 +8,8 @@ export const validate: RequestHandler = (req, res, next) => {
     level: Yup.string().required().oneOf(LogLevels),
     appId: Yup.string().required(),
     location: Yup.string().required(),
+    message: Yup.string(),
+    detail: Yup.mixed(),
   });
 
   schema
