@@ -21,13 +21,21 @@ type Level = {
 };
 
 const dispatchLog = async (params: LogParams & Level) => {
-  await axios.post(appEnv.logsServiceUrl, params).catch((e) => {
+  await axios({
+    url: `${appEnv.logsServiceUrl}/logs`,
+    method: 'POST',
+    data: { ...params, appId: appEnv.logsAppId },
+    headers: {
+      Authorization: `apiKey ${appEnv.logsApiKey}`,
+    },
+  }).catch((e) => {
     // eslint-disable-next-line
     console.log(
       '[ERROR] Failed to dispatch log to url',
       appEnv.logsServiceUrl,
       'reason',
-      e.message
+      e.message,
+      e.response.data
     );
   });
 };

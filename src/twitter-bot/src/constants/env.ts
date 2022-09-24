@@ -12,7 +12,7 @@ const appEnv = {
   mongoContainerName: requireProcessEnv('MONGO_CONTAINER_NAME'),
   mongoDbName: requireProcessEnv('MONGO_DB_NAME'),
   port: requireProcessEnv('APP_PORT'),
-  apiKey: requireProcessEnv('API_KEY'),
+  logsApiKey: requireProcessEnv('LOGS_API_KEY'),
   logsAppId: requireProcessEnv('LOGS_APP_ID'),
   logsServiceUrl: requireProcessEnv('LOGS_URI'),
 };

@@ -6,7 +6,6 @@ import mongoose from 'mongoose';
 import appRouter from './api';
 import appEnv from './constants/env';
 import { mongoUri } from './constants/mongo';
-import Logger from './services/logs';
 
 mongoose.connect(mongoUri);
 
