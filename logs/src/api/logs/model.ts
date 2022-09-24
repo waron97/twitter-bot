@@ -1,5 +1,7 @@
 import { Document, Schema, model } from 'mongoose';
 
+export const LogLevels = ['debug', 'info', 'warning', 'error', 'critical'];
+
 export enum LogLevel {
   DEBUG = 'debug',
   INFO = 'info',
@@ -30,7 +32,7 @@ const logSchema = new Schema<ILog>({
     type: String,
     required: true,
     default: LogLevel.DEBUG,
-    enum: ['debug', 'info', 'warning', 'error', 'critical'],
+    enum: LogLevels,
   },
   location: {
     type: String,

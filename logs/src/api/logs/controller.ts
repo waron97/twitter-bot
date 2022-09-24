@@ -9,10 +9,14 @@ export const index: RequestHandler = async (req, res, next) => {
   const {
     pagination: { page, pageSize, limit, skip },
   } = req;
-  const op = Log.find(filters);
-  op.estimatedDocumentCount().then((size) => {
-    op.skip(skip).limit(limit).then(paginated(res, { page, pageSize, size }));
-  });
+  Log.find(filters)
+    .estimatedDocumentCount()
+    .then((size) => {
+      return Log.find(filters)
+        .skip(skip)
+        .limit(limit)
+        .then(paginated(res, { page, pageSize, size }));
+    });
 };
 
 export const create: RequestHandler = (req, res, next) => {

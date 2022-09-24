@@ -14,4 +14,6 @@ export const pagination: () => RequestHandler = () => (req, res, next) => {
     page,
     pageSize,
   };
+
+  next();
 };
