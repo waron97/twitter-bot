@@ -9,13 +9,16 @@ export const index: RequestHandler = async (req, res, next) => {
   const {
     pagination: { page, pageSize, limit, skip },
   } = req;
-  Log.count(filters).then((size) => {
-    return Log.find(filters)
-      .skip(skip)
-      .limit(limit)
-      .sort({ date: 'desc' })
-      .then(paginated(res, { page, pageSize, size }));
-  });
+  Log.count(filters)
+    .then((size) => {
+      return Log.find(filters)
+        .skip(skip)
+        .limit(limit)
+        .sort({ date: 'desc' })
+        .then(paginated(res, { page, pageSize, size }))
+        .catch(next);
+    })
+    .catch(next);
 };
 
 export const create: RequestHandler = (req, res, next) => {
