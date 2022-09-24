@@ -2,7 +2,8 @@ version: '3.9'
 
 services:
   logs:
-    image: logs
+    image: twitter-bot/logs
+    build: logs
     container_name: logs-api
     networks:
       - app_network
@@ -15,7 +16,8 @@ services:
       - MONGO_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
       - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
       - MONGO_DB_NAME=logs-db-dev
-      - LOGS_APP_ID = twitter-bot
+      - LOGS_APP_ID=twitter-bot
+      - APP_PORT=8080
     command: "yarn run dev"
   
   mongo:
