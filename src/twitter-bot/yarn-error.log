@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/aron/.nvm/versions/node/v16.10.0/bin/node /opt/homebrew/bin/yarn add -D @types/azios
+  /Users/aron/.nvm/versions/node/v16.10.0/bin/node /opt/homebrew/bin/yarn add -D @types/dayjs
 
 PATH: 
   /Users/aron/.nvm/versions/node/v16.10.0/bin:/Library/Frameworks/Python.framework/Versions/3.9/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/users/aron/development/flutter/bin:/Library/TeX/texbin:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Users/aron/micromamba/bin:/Users/aron/micromamba/condabin:/Users/aron/.nvm/versions/node/v16.10.0/bin:/Library/Frameworks/Python.framework/Versions/3.9/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/aron/.cargo/bin
@@ -14,7 +14,7 @@ Platform:
   darwin arm64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fazios: Not found
+  Error: https://registry.yarnpkg.com/@types%2fdayjs: Not found
       at Request.params.callback [as _callback] (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:66988:18)
       at Request.self.callback (/opt/homebrew/lib/node_modules/yarn/lib/cli.js:140662:22)
       at Request.emit (node:events:390:28)
@@ -38,9 +38,11 @@ npm manifest:
     },
     "dependencies": {
       "axios": "^0.27.2",
+      "dayjs": "^1.11.5",
       "express": "^4.18.1",
       "mongoose": "^6.6.1",
       "node-cron": "^3.0.2",
+      "node-fetch": "^3.2.10",
       "yup": "^0.32.11"
     },
     "devDependencies": {
@@ -663,6 +665,16 @@ Lockfile:
       shebang-command "^2.0.0"
       which "^2.0.1"
   
+  data-uri-to-buffer@^4.0.0:
+    version "4.0.0"
+    resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-4.0.0.tgz#b5db46aea50f6176428ac05b73be39a57701a64b"
+    integrity sha512-Vr3mLBA8qWmcuschSLAOogKgQ/Jwxulv3RNE4FXnYWRGujzrRWQI4m12fQqRkwX06C0KanhLr4hK+GydchZsaA==
+  
+  dayjs@^1.11.5:
+    version "1.11.5"
+    resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.5.tgz#00e8cc627f231f9499c19b38af49f56dc0ac5e93"
+    integrity sha512-CAdX5Q3YW3Gclyo5Vpqkgpj8fSdLQcRuzfX6mC6Phy0nfJ0eGYOeS7m4mt2plDWLAtA4TqTakvbboHvUxfe4iA==
+  
   debug@2.6.9, debug@^2.6.9:
     version "2.6.9"
     resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -1122,6 +1134,14 @@ Lockfile:
     dependencies:
       reusify "^1.0.4"
   
+  fetch-blob@^3.1.2, fetch-blob@^3.1.4:
+    version "3.2.0"
+    resolved "https://registry.yarnpkg.com/fetch-blob/-/fetch-blob-3.2.0.tgz#f09b8d4bbd45adc6f0c20b7e787e793e309dcce9"
+    integrity sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==
+    dependencies:
+      node-domexception "^1.0.0"
+      web-streams-polyfill "^3.0.3"
+  
   file-entry-cache@^6.0.1:
     version "6.0.1"
     resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-6.0.1.tgz#211b2dd9659cb0394b073e7323ac3c933d522027"
@@ -1183,6 +1203,13 @@ Lockfile:
       asynckit "^0.4.0"
       combined-stream "^1.0.8"
       mime-types "^2.1.12"
+  
+  formdata-polyfill@^4.0.10:
+    version "4.0.10"
+    resolved "https://registry.yarnpkg.com/formdata-polyfill/-/formdata-polyfill-4.0.10.tgz#24807c31c9d402e002ab3d8c720144ceb8848423"
+    integrity sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==
+    dependencies:
+      fetch-blob "^3.1.2"
   
   forwarded@0.2.0:
     version "0.2.0"
@@ -1760,6 +1787,20 @@ Lockfile:
     integrity sha512-iP8l0yGlNpE0e6q1o185yOApANRe47UPbLf4YxfbiNHt/RU5eBcGB/e0oudruheSf+LQeDMezqC5BVAb5wwRcQ==
     dependencies:
       uuid "8.3.2"
+  
+  node-domexception@^1.0.0:
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/node-domexception/-/node-domexception-1.0.0.tgz#6888db46a1f71c0b76b3f7555016b63fe64766e5"
+    integrity sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==
+  
+  node-fetch@^3.2.10:
+    version "3.2.10"
+    resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.2.10.tgz#e8347f94b54ae18b57c9c049ef641cef398a85c8"
+    integrity sha512-MhuzNwdURnZ1Cp4XTazr69K0BTizsBroX7Zx3UgDSVcZYKF/6p0CBe4EUb/hLqmzVhl0UpYfgRljQ4yxE+iCxA==
+    dependencies:
+      data-uri-to-buffer "^4.0.0"
+      fetch-blob "^3.1.4"
+      formdata-polyfill "^4.0.10"
   
   nodemon@^2.0.20:
     version "2.0.20"
@@ -2446,6 +2487,11 @@ Lockfile:
     version "1.1.2"
     resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
     integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
+  
+  web-streams-polyfill@^3.0.3:
+    version "3.2.1"
+    resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.2.1.tgz#71c2718c52b45fd49dbeee88634b3a60ceab42a6"
+    integrity sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==
   
   webidl-conversions@^7.0.0:
     version "7.0.0"

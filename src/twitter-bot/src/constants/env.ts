@@ -15,6 +15,7 @@ const appEnv = {
   logsApiKey: requireProcessEnv('LOGS_API_KEY'),
   logsAppId: requireProcessEnv('LOGS_APP_ID'),
   logsServiceUrl: requireProcessEnv('LOGS_URI'),
+  twitterToken: requireProcessEnv('TWITTER_BEARER_TOKEN'),
 };
 
 export default appEnv;

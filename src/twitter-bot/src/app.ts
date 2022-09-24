@@ -6,8 +6,11 @@ import mongoose from 'mongoose';
 import appRouter from './api';
 import appEnv from './constants/env';
 import { mongoUri } from './constants/mongo';
+import initTwitterCron from './services/twitter';
 
-mongoose.connect(mongoUri);
+mongoose.connect(mongoUri).then(() => {
+  initTwitterCron();
+});
 
 const app = express();
 
