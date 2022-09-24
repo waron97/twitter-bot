@@ -4,7 +4,7 @@ services:
   logs:
     image: twitter-bot/logs
     build: logs
-    container_name: bot-service
+    container_name: ${LOGS_CONTAINER_NAME}
     networks:
       - app_network
     ports:
@@ -25,7 +25,7 @@ services:
   twitter-bot:
     image: twitter-bot/twitter-bot
     build: twitter-bot
-    container_name: logs-api
+    container_name: twitter-bot
     networks:
       - app_network
     ports:
@@ -41,6 +41,7 @@ services:
       - LOGS_APP_ID=twitter-bot
       - APP_PORT=8080
       - API_KEY=${LOGS_API_KEY}
+      - LOGS_URI="http://${LOGS_CONTAINER_NAME}:8080"
     command: "yarn run dev"
   
   mongo:
@@ -59,3 +60,4 @@ services:
 
 networks:
   app_network:
+    driver: bridge

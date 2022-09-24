@@ -18,6 +18,7 @@ export interface ILog {
   location: string;
   message: string;
   detail: AnyObject;
+  date: Date;
 }
 
 export type LogDocument = ILog & Document;
@@ -42,6 +43,10 @@ const logSchema = new Schema<ILog>({
   },
   detail: {
     type: {},
+  },
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 

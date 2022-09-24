@@ -13,6 +13,8 @@ const appEnv = {
   mongoDbName: requireProcessEnv('MONGO_DB_NAME'),
   port: requireProcessEnv('APP_PORT'),
   apiKey: requireProcessEnv('API_KEY'),
+  logsAppId: requireProcessEnv('LOGS_APP_ID'),
+  logsServiceUrl: requireProcessEnv('LOGS_URI'),
 };
 
 export default appEnv;

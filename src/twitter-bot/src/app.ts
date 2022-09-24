@@ -1,11 +1,12 @@
-import * as bodyParser from "body-parser";
-import * as cors from "cors";
-import * as express from "express";
-import mongoose from "mongoose";
+import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
+import * as express from 'express';
+import mongoose from 'mongoose';
 
-import appRouter from "./api";
-import appEnv from "./constants/env";
-import { mongoUri } from "./constants/mongo";
+import appRouter from './api';
+import appEnv from './constants/env';
+import { mongoUri } from './constants/mongo';
+import Logger from './services/logs';
 
 mongoose.connect(mongoUri);
 

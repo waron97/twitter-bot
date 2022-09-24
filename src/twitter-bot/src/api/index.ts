@@ -1,13 +1,13 @@
 import { Router } from 'express';
 
-import logsRouter from './logs';
+import tweetsRouter from './tweets';
 
 const appRouter = Router();
 
 appRouter.get('/', (req, res) => {
-  res.send('Server alive');
+  res.send('Bot server alive');
 });
 
-appRouter.use('/logs', logsRouter);
+appRouter.use('/tweets', tweetsRouter);
 
 export default appRouter;
