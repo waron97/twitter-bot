@@ -24,6 +24,6 @@ export const validate: RequestHandler = (req, res, next) => {
         type,
         error: errors[0],
       }));
-      res.status(421).json({ errors }).end();
+      res.status(422).json({ errors }).end();
     });
 };
