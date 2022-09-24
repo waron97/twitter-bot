@@ -1,11 +1,11 @@
-import * as bodyParser from 'body-parser';
-import * as cors from 'cors';
-import * as express from 'express';
-import mongoose from 'mongoose';
+import * as bodyParser from "body-parser";
+import * as cors from "cors";
+import * as express from "express";
+import mongoose from "mongoose";
 
-import appRouter from './api';
-import appEnv from './constants/env';
-import { mongoUri } from './constants/mongo';
+import appRouter from "./api";
+import appEnv from "./constants/env";
+import { mongoUri } from "./constants/mongo";
 
 mongoose.connect(mongoUri);
 
@@ -17,7 +17,7 @@ app.use(appRouter);
 
 app.listen(appEnv.port, () => {
   // eslint-disable-next-line
-  console.log(`Express server listening on port ${appEnv.port}`);
+  console.log(`Bot service listening on port ${appEnv.port}`);
 });
 
 export default app;
