@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import Filters, { LogLevels } from './components/Filters'
+import LogDrawer from './components/LogDrawer'
 import Terminal from './components/Terminal'
 import useLogs from './hooks/useLogs'
 
@@ -19,12 +20,19 @@ function _Home(props) {
     // Hooks (e.g. useState, ...)
     // -------------------------------------
 
+    const [selectedLogId, setSelectedLogId] = useState()
+
     const [filters, setFilters] = useState({
         appId: undefined,
         levels: LogLevels.map((l) => l.value),
     })
 
     const [logs, loadNextPage] = useLogs(filters)
+
+    const selectedLog = useMemo(
+        () => logs?.find((l) => l._id === selectedLogId),
+        [selectedLogId]
+    )
 
     // -------------------------------------
     // Memoized values
@@ -54,9 +62,18 @@ function _Home(props) {
             <div className="terminal-wrapper">
                 <Filters values={filters} onChange={handleChange} />
                 <div className="terminal-wrapper-inner">
-                    <Terminal logs={logs} loadNextPage={loadNextPage} />
+                    <Terminal
+                        logs={logs}
+                        loadNextPage={loadNextPage}
+                        onLogSelected={(id) => setSelectedLogId(id)}
+                    />
                 </div>
             </div>
+            <LogDrawer
+                open={!!selectedLogId}
+                onClose={() => setSelectedLogId(null)}
+                log={selectedLog}
+            />
         </div>
     )
 }

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'styled-components'
 
+import { getStatusColor } from '../../../../../_shared/constants'
+
 // ----------------------------------------------------------------------------
 
 function _LogItem(props) {
@@ -30,23 +32,6 @@ function _LogItem(props) {
     // Component functions
     // -------------------------------------
 
-    function getColor() {
-        switch (level) {
-            case 'debug':
-                return '#B0DDFF'
-            case 'info':
-                return '#3BABFF'
-            case 'warning':
-                return '#FFC13B'
-            case 'error':
-                return '#FD572A'
-            case 'critical':
-                return '#FF0000'
-            default:
-                return 'white'
-        }
-    }
-
     // -------------------------------------
     // Component local variables
     // -------------------------------------
@@ -59,7 +44,10 @@ function _LogItem(props) {
             }`}
         >
             <span className="date">{dayjs(date).format('HH:mm')}</span>
-            <span style={{ color: getColor() }} className="level">
+            <span
+                style={{ color: getStatusColor(log.level) }}
+                className="level"
+            >
                 {level}
             </span>
             <span className="location text-ellipsis overflow-hidden whitespace-nowrap">
@@ -93,6 +81,12 @@ const LogItem = styled(_LogItem)`
         overflow: hidden;
 
         transform: scale(0%);
+        padding: 12px 0px;
+
+        :hover {
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
 
         > span {
             display: block;

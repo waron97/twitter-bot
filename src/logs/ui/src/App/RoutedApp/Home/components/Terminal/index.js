@@ -12,7 +12,7 @@ function _Terminal(props) {
     // Props destructuring
     // -------------------------------------
 
-    const { className, logs, loadNextPage } = props
+    const { className, logs, loadNextPage, onLogSelected } = props
 
     // -------------------------------------
     // Hooks (e.g. useState, ...)
@@ -69,7 +69,10 @@ function _Terminal(props) {
                     {logs?.map((log) => {
                         return (
                             <div key={log._id}>
-                                <LogItem log={log} />
+                                <LogItem
+                                    log={log}
+                                    onClick={() => onLogSelected(log._id)}
+                                />
                                 <div className="logs-sep" />
                             </div>
                         )
@@ -117,7 +120,6 @@ const Terminal = styled(_Terminal)`
             padding-top: 10px;
             .logs-sep {
                 width: 100%;
-                margin: 12px 0px;
                 background: white;
                 align-self: center;
                 border-bottom: 1px solid #a1a1a1;
