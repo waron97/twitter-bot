@@ -1,14 +1,10 @@
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-
-import Filters from './components/Filters'
-import Terminal from './components/Terminal'
-import useLogs from './hooks/useLogs'
 
 // ----------------------------------------------------------------------------
 
-function _Home(props) {
+function _Navbar(props) {
     // -------------------------------------
     // Props destructuring
     // -------------------------------------
@@ -18,10 +14,6 @@ function _Home(props) {
     // -------------------------------------
     // Hooks (e.g. useState, ...)
     // -------------------------------------
-
-    const [filters, setFilters] = useState({ appId: 'twitter-bot' })
-
-    const logs = useLogs(filters)
 
     // -------------------------------------
     // Memoized values
@@ -35,23 +27,13 @@ function _Home(props) {
     // Component functions
     // -------------------------------------
 
-    function handleChange(field) {
-        return (v) => {
-            const value = v?.target?.value !== undefined ? v.target.value : v
-            setFilters({ ...filters, [field]: value })
-        }
-    }
-
     // -------------------------------------
     // Component local variables
     // -------------------------------------
 
     return (
         <div className={`${className}`}>
-            <div className="terminal-wrapper">
-                <Filters values={filters} onChange={handleChange} />
-                <Terminal logs={logs} />
-            </div>
+            <div className="logo">Logs Service</div>
         </div>
     )
 }
@@ -60,32 +42,32 @@ function _Home(props) {
 // Component PropTypes and default props
 // ----------------------------------------------------------------------------
 
-_Home.propTypes = {
+_Navbar.propTypes = {
     className: PropTypes.string.isRequired,
 }
 
-_Home.defaultProps = {}
+_Navbar.defaultProps = {}
 
 // ----------------------------------------------------------------------------
 
-const Home = styled(_Home)`
+const Navbar = styled(_Navbar)`
     & {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: 100%;
-        flex: 1;
-        .terminal-wrapper {
-            width: 70%;
-            flex: 1;
-            min-height: 0;
+        width: 100%;
+        height: 60px;
+        background: white;
 
-            display: flex;
-            flex-direction: column;
-            position: relative;
+        box-shadow: inset 0px -1px 0px #e2e2ea;
+
+        display: flex;
+        align-items: center;
+        padding: 0px 30px;
+
+        .logo {
+            font-weight: 700;
+            font-size: 22px;
         }
     }
 `
 // ----------------------------------------------------------------------------
 
-export default Home
+export default Navbar

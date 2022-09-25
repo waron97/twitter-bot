@@ -1,27 +1,20 @@
+import { Input, Select } from 'antd'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-
-import Filters from './components/Filters'
-import Terminal from './components/Terminal'
-import useLogs from './hooks/useLogs'
 
 // ----------------------------------------------------------------------------
 
-function _Home(props) {
+function _Filters(props) {
     // -------------------------------------
     // Props destructuring
     // -------------------------------------
 
-    const { className } = props
+    const { className, values, onChange } = props
 
     // -------------------------------------
     // Hooks (e.g. useState, ...)
     // -------------------------------------
-
-    const [filters, setFilters] = useState({ appId: 'twitter-bot' })
-
-    const logs = useLogs(filters)
 
     // -------------------------------------
     // Memoized values
@@ -35,23 +28,18 @@ function _Home(props) {
     // Component functions
     // -------------------------------------
 
-    function handleChange(field) {
-        return (v) => {
-            const value = v?.target?.value !== undefined ? v.target.value : v
-            setFilters({ ...filters, [field]: value })
-        }
-    }
-
     // -------------------------------------
     // Component local variables
     // -------------------------------------
 
     return (
         <div className={`${className}`}>
-            <div className="terminal-wrapper">
-                <Filters values={filters} onChange={handleChange} />
-                <Terminal logs={logs} />
-            </div>
+            <Input
+                value={values.since}
+                onChange={onChange('since')}
+                className="app-id"
+                placeholder="ID app"
+            ></Input>
         </div>
     )
 }
@@ -60,32 +48,26 @@ function _Home(props) {
 // Component PropTypes and default props
 // ----------------------------------------------------------------------------
 
-_Home.propTypes = {
+_Filters.propTypes = {
     className: PropTypes.string.isRequired,
 }
 
-_Home.defaultProps = {}
+_Filters.defaultProps = {}
 
 // ----------------------------------------------------------------------------
 
-const Home = styled(_Home)`
+const Filters = styled(_Filters)`
     & {
+        width: 100%;
+        height: 30px;
+        border-bottom: 1px solid #c1c1c1;
         display: flex;
-        flex-direction: column;
         align-items: center;
-        height: 100%;
-        flex: 1;
-        .terminal-wrapper {
-            width: 70%;
-            flex: 1;
-            min-height: 0;
 
-            display: flex;
-            flex-direction: column;
-            position: relative;
+        .app-id {
         }
     }
 `
 // ----------------------------------------------------------------------------
 
-export default Home
+export default Filters

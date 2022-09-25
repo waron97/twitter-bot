@@ -1,4 +1,7 @@
+import axios from 'axios'
 import formUrlEncoded from 'form-urlencoded'
+
+const apiKey = 'logs-api-key'
 
 function getBaseUrl() {
     if (process.env.NODE_ENV === 'development') {
@@ -16,4 +19,18 @@ export function getApiUrl(endpoint, params) {
     return url
 }
 
-export function getLogs(params) {}
+export function getLogs(params) {
+    const url = getApiUrl('/logs', { ...params })
+    return sendRequest(url, 'GET')
+}
+
+async function sendRequest(url, method, body) {
+    const { data } = await axios({
+        method,
+        url,
+        data: body,
+        headers: { Authorization: `apiKey ${apiKey}` },
+    })
+
+    return data
+}

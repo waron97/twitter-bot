@@ -1,46 +1,50 @@
-import PropTypes from 'prop-types';
-import React from 'react';
-import { RouterProvider, createHashRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import PropTypes from 'prop-types'
+import React from 'react'
+import { RouterProvider, createHashRouter } from 'react-router-dom'
+import styled from 'styled-components'
 
-import Home from './Home';
+import Navbar from '../_shared/components/Navbar'
+import Home from './Home'
 
 // ----------------------------------------------------------------------------
 
-const router = createHashRouter([{ path: '/', element: <Home /> }]);
+const router = createHashRouter([{ path: '/', element: <Home /> }])
 
 function _RoutedApp(props) {
-  // -------------------------------------
-  // Props destructuring
-  // -------------------------------------
+    // -------------------------------------
+    // Props destructuring
+    // -------------------------------------
 
-  const { className } = props;
+    const { className } = props
 
-  // -------------------------------------
-  // Hooks (e.g. useState, ...)
-  // -------------------------------------
+    // -------------------------------------
+    // Hooks (e.g. useState, ...)
+    // -------------------------------------
 
-  // -------------------------------------
-  // Memoized values
-  // -------------------------------------
+    // -------------------------------------
+    // Memoized values
+    // -------------------------------------
 
-  // -------------------------------------
-  // Effects
-  // -------------------------------------
+    // -------------------------------------
+    // Effects
+    // -------------------------------------
 
-  // -------------------------------------
-  // Component functions
-  // -------------------------------------
+    // -------------------------------------
+    // Component functions
+    // -------------------------------------
 
-  // -------------------------------------
-  // Component local variables
-  // -------------------------------------
+    // -------------------------------------
+    // Component local variables
+    // -------------------------------------
 
-  return (
-    <div className={`${className}`}>
-      <RouterProvider router={router} />
-    </div>
-  );
+    return (
+        <div className={`${className}`}>
+            <Navbar />
+            <main>
+                <RouterProvider router={router} />
+            </main>
+        </div>
+    )
 }
 
 // ----------------------------------------------------------------------------
@@ -48,17 +52,30 @@ function _RoutedApp(props) {
 // ----------------------------------------------------------------------------
 
 _RoutedApp.propTypes = {
-  className: PropTypes.string.isRequired,
-};
+    className: PropTypes.string.isRequired,
+}
 
-_RoutedApp.defaultProps = {};
+_RoutedApp.defaultProps = {}
 
 // ----------------------------------------------------------------------------
 
 const RoutedApp = styled(_RoutedApp)`
-  & {
-  }
-`;
+    & {
+        display: flex;
+        flex-direction: column;
+        width: 100vw;
+        max-width: 100vw;
+        min-height: 100vh;
+        main {
+            flex: 1;
+            background: #ededed;
+            padding: 20px;
+
+            display: flex;
+            flex-direction: column;
+        }
+    }
+`
 // ----------------------------------------------------------------------------
 
-export default RoutedApp;
+export default RoutedApp
