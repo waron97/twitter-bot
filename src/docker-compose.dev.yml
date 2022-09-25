@@ -13,7 +13,7 @@ services:
       - ./logs/src:/usr/app/src:rw
       - ./logs/static:/usr/app/static:rw
     environment:
-      - MONGO_URI=${MONGO_URI}
+      - MONGO_URI=${MONGO_URI_LOGS}
       - APP_PORT=8080
       - DEFAULT_ADMIN_KEY=${LOGS_DEFAULT_ADMIN_KEY}
       - DEFAULT_READONLY_KEY=${LOGS_DEFAULT_READONLY_KEY}
@@ -37,7 +37,7 @@ services:
       - ./twitter-bot/src:/usr/app/src:rw
       - ./twitter-bot/static:/usr/app/static:rw
     environment:
-      - MONGO_URI=${MONGO_URI}
+      - MONGO_URI=${MONGO_URI_BOT}
       - LOGS_APP_ID=${LOGS_APP_ID}
       - LOGS_API_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
       - LOGS_URI=http://${LOGS_CONTAINER_NAME}:8080

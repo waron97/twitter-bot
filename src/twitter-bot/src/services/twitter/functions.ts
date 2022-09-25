@@ -32,8 +32,7 @@ type TwitterResponse = {
 };
 
 export const getRecentTweets = async () => {
-  Logger.debug('getRecentTweets', 'Execution start');
-
+  const splits = getAccountQuerySplits();
   const lastFetchedTweet = (
     await FetchInstruction.find({})
       .sort({
@@ -41,7 +40,11 @@ export const getRecentTweets = async () => {
       })
       .limit(1)
   )?.[0];
-
+  Logger.info(
+    'getRecentTweets',
+    `Starting tweet fetch in ${splits.length} splits`,
+    { splits }
+  );
   Logger.debug(
     'getRecentTweets',
     `Last tweet we fetched: ${
@@ -49,6 +52,19 @@ export const getRecentTweets = async () => {
     }`,
     lastFetchedTweet
   );
+  for (const split of splits) {
+    await getAccountSplitTweets(split, lastFetchedTweet);
+  }
+  Logger.info(`getRecentTweets`, 'Execution finished for function');
+};
+
+const getAccountSplitTweets = async (
+  accounts: string,
+  lastFetchedTweet: FetchInstructionDocument
+) => {
+  Logger.debug('getAccountSplitTweets', 'Execution start for account split', {
+    accounts,
+  });
 
   let nextToken: string | undefined;
   const items: ApiTweet[] = [];
@@ -56,14 +72,14 @@ export const getRecentTweets = async () => {
   let response: TwitterResponse;
 
   try {
-    const data = await getTweetList(lastFetchedTweet);
+    const data = await getTweetList(accounts, lastFetchedTweet);
 
     response = {
       meta: data?.meta,
       data: data?.data ?? [],
     };
     Logger.debug(
-      'getRecentTweets',
+      'getAccountSplitTweets',
       'Twitter responded to first page fetch',
       response
     );
@@ -77,7 +93,11 @@ export const getRecentTweets = async () => {
 
   while (nextToken) {
     try {
-      const nextPageData = await getTweetList(lastFetchedTweet, nextToken);
+      const nextPageData = await getTweetList(
+        accounts,
+        lastFetchedTweet,
+        nextToken
+      );
       nextPageData?.data?.forEach((tweet) => items.push(tweet));
       nextToken = nextPageData.meta.next_token;
     } catch {
@@ -86,7 +106,10 @@ export const getRecentTweets = async () => {
     }
   }
 
-  Logger.debug('getRecentTweets', `Done fetching ${items.length} new tweets`);
+  Logger.debug(
+    'getAccountSplitTweets',
+    `Done fetching ${items.length} new tweets`
+  );
 
   for (const tweet of items) {
     const instructionBody: IFetchInstruction = {
@@ -95,14 +118,14 @@ export const getRecentTweets = async () => {
     };
     await FetchInstruction.create(instructionBody).catch((e) => {
       Logger.error(
-        'getRecentTweets',
+        'getAccountSplitTweets',
         'Failed to write fetch instruction for tweet',
         e
       );
     });
   }
 
-  Logger.info('getRecentTweets', `Finished execution`);
+  Logger.debug('getAccountSplitTweets', `Finished execution`);
 };
 
 export const executeTweetFetch = async () => {
@@ -153,14 +176,17 @@ export const executeTweetFetch = async () => {
 };
 
 const getTweetList: (
+  accounts: string,
   lastFetchedTweet?: FetchInstructionDocument,
   nextToken?: string
-) => Promise<TwitterResponse> = async (lastFetchedTweet, nextToken) => {
+) => Promise<TwitterResponse> = async (
+  accounts,
+  lastFetchedTweet,
+  nextToken
+) => {
   const query: TwitterParams = {
     'tweet.fields': 'created_at',
-    query:
-      accounts.map((a) => `from:${a}`).join(' OR ') +
-      ' -is:reply -is:retweet -is:quote',
+    query: `${accounts}  -is:reply -is:retweet -is:quote`,
   };
 
   if (lastFetchedTweet) {
@@ -195,7 +221,27 @@ const getTweetList: (
   }
 };
 
-const getTweetDetail = async (tweetId) => {
+const getAccountQuerySplits = () => {
+  // query length cannot be longer than 500, so we need to make more smaller fetches
+  const splits: string[] = [];
+  let currentSplit: string[] = [];
+
+  for (const account of accounts) {
+    const splitLength = currentSplit.reduce(
+      (acc, current) => acc + current.length,
+      0
+    );
+    if (splitLength < 300) {
+      currentSplit.push(account);
+    } else {
+      splits.push(currentSplit.join(' OR '));
+      currentSplit = [account];
+    }
+  }
+  return splits;
+};
+
+const getTweetDetail = async (tweetId: string) => {
   const query = {
     'tweet.fields':
       'text,author_id,created_at,public_metrics,referenced_tweets,source,in_reply_to_user_id,entities,context_annotations,conversation_id',
