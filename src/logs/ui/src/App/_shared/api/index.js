@@ -5,7 +5,7 @@ function getBaseUrl() {
     if (process.env.NODE_ENV === 'development') {
         return 'http://localhost:8090'
     } else {
-        return 'http://localhost:8090'
+        return 'http://172.104.159.17:8090'
     }
 }
 
