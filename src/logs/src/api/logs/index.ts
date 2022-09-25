@@ -10,7 +10,7 @@ const router = Router();
 
 router.get('/', apiKey(), pagination(), index);
 
-router.get('/app-ids', apiKey(), mcache(1), getAppIds);
+router.get('/app-ids', apiKey(), mcache(5), getAppIds);
 
 router.post('/', apiKey(), validate, create);
 
