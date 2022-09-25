@@ -58,7 +58,7 @@ export default function useLogs(filters) {
                     if (newLogs?.data?.length) {
                         setLogs(dedupe([...newLogs.data, ...logs]))
                     }
-                }, seconds(5))
+                }, seconds(2))
             }
         }
 
