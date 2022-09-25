@@ -1,4 +1,3 @@
-import { Input, Select } from 'antd'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'styled-components'
@@ -32,16 +31,7 @@ function _Filters(props) {
     // Component local variables
     // -------------------------------------
 
-    return (
-        <div className={`${className}`}>
-            <Input
-                value={values.since}
-                onChange={onChange('since')}
-                className="app-id"
-                placeholder="ID app"
-            ></Input>
-        </div>
-    )
+    return <div className={`${className}`}></div>
 }
 
 // ----------------------------------------------------------------------------

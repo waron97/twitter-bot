@@ -24,3 +24,32 @@ export const index: RequestHandler = async (req, res, next) => {
 export const create: RequestHandler = (req, res, next) => {
   Log.create(req.body).then(success(res, 201)).catch(next);
 };
+
+export const getAppIds: RequestHandler = async (req, res, next) => {
+  try {
+    const first = await Log.findOne({});
+
+    if (!first) {
+      res.send([]);
+      return;
+    }
+
+    const ids = [first?.appId];
+    let foundResult = true;
+
+    while (foundResult) {
+      const nextLog = await Log.findOne({ appId: { $nin: ids } });
+
+      if (nextLog) {
+        foundResult = true;
+        ids.push(nextLog.appId);
+      } else {
+        foundResult = false;
+      }
+    }
+
+    res.send(ids);
+  } catch (e) {
+    next(e);
+  }
+};

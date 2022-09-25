@@ -3,12 +3,14 @@ FROM node:latest
 WORKDIR /usr/app
 
 COPY package.json package.json
+COPY yarn.lock yarn.lock
 
 RUN yarn
 
 WORKDIR /usr/app/ui
 
 COPY ui/package.json package.json
+COPY ui/yarn.lock yarn.lock
 
 RUN yarn
 
