@@ -12,6 +12,11 @@ const appEnv = {
   defaultAdminKey: requireProcessEnv('DEFAULT_ADMIN_KEY'),
   defaultReadonlyKey: requireProcessEnv('DEFAULT_READONLY_KEY'),
   defaultWriteonlyKey: requireProcessEnv('DEFAULT_WRITEONLY_KEY'),
+  lifetimeDaysDebug: parseInt(requireProcessEnv('LIFETIME_DAYS_DEBUG')),
+  lifetimeDaysInfo: parseInt(requireProcessEnv('LIFETIME_DAYS_INFO')),
+  lifetimeDaysWarning: parseInt(requireProcessEnv('LIFETIME_DAYS_WARNING')),
+  lifetimeDaysError: parseInt(requireProcessEnv('LIFETIME_DAYS_ERROR')),
+  lifetimeDaysCritical: parseInt(requireProcessEnv('LIFETIME_DAYS_CRITICAL')),
 };
 
 export default appEnv;

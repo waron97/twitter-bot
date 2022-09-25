@@ -5,11 +5,13 @@ import mongoose from 'mongoose';
 
 import appRouter from './api';
 import { createDefaultKeys } from './api/keys/service';
+import { scheduleObsoleteLogsRemoval } from './api/logs/service';
 import appEnv from './constants/env';
 import { mongoUri } from './constants/mongo';
 
 mongoose.connect(mongoUri).then(() => {
   createDefaultKeys();
+  scheduleObsoleteLogsRemoval();
 });
 
 const app = express();
