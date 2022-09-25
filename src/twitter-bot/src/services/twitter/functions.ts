@@ -57,6 +57,10 @@ export const getRecentTweets = async () => {
   for (const split of splits) {
     await getAccountSplitTweets(split, lastFetchedTweet);
     // have to sleep in between batches to not exceed rate limits
+    Logger.debug(
+      'getRecentTweets',
+      'Starting 15 minute wait before next batch'
+    );
     await sleep(15, 'minutes');
   }
   Logger.info(`getRecentTweets`, 'Execution finished for function');
@@ -124,7 +128,7 @@ const getAccountSplitTweets = async (
     });
   }
 
-  Logger.debug('getAccountSplitTweets', `Finished execution`);
+  Logger.debug('getAccountSplitTweets', `Finished execution for current batch`);
 };
 
 export const executeTweetFetch = async () => {

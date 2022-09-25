@@ -2,6 +2,6 @@ import scheduleTask from '../cron';
 import { executeTweetFetch, getRecentTweets } from './functions';
 
 export default function initTwitterCron() {
-  scheduleTask('* * * * *', getRecentTweets);
+  scheduleTask('0 */4 * * *', getRecentTweets);
   scheduleTask('* * * * *', executeTweetFetch);
 }
