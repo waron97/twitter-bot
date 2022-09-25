@@ -11,6 +11,8 @@ mongoose.connect(mongoUri);
 
 const app = express();
 
+app.use(express.static('static'));
+app.use(express.static('frontend'));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(appRouter);
