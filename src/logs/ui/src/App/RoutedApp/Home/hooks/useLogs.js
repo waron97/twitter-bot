@@ -12,6 +12,10 @@ export default function useLogs() {
     const { apiKey } = useAuth()
 
     useEffect(() => {
+        if (!apiKey) {
+            return
+        }
+
         const interval = setInterval(async () => {
             const since = logs?.length
                 ? dayjs(logs[0].date).toISOString()
@@ -26,7 +30,7 @@ export default function useLogs() {
         return () => {
             clearInterval(interval)
         }
-    }, [logs])
+    }, [logs, apiKey])
 
     return logs
 }

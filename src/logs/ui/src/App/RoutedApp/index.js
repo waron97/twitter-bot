@@ -4,6 +4,7 @@ import { RouterProvider, createHashRouter } from 'react-router-dom'
 import styled from 'styled-components'
 
 import Navbar from '../_shared/components/Navbar'
+import AuthModal from './AuthModal'
 import Home from './Home'
 
 // ----------------------------------------------------------------------------
@@ -43,6 +44,7 @@ function _RoutedApp(props) {
             <main>
                 <RouterProvider router={router} />
             </main>
+            <AuthModal />
         </div>
     )
 }
