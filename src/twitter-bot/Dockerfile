@@ -8,4 +8,6 @@ RUN yarn
 
 COPY . .
 
+RUN yarn run build
+
 CMD [ "yarn", "run", "dev" ]

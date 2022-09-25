@@ -1,0 +1,64 @@
+version: '3.9'
+
+services:
+  logs:
+    image: twitter-bot/logs
+    build: logs
+    container_name: ${LOGS_CONTAINER_NAME}
+    networks:
+      - app_network
+    ports:
+      - "8090:8080"
+    volumes:
+      - ./logs/src:/usr/app/src:rw
+      - ./logs/static:/usr/app/static:rw
+    environment:
+      - MONGO_URI=${MONGO_URI_LOGS}
+      - APP_PORT=8080
+      - DEFAULT_ADMIN_KEY=${LOGS_DEFAULT_ADMIN_KEY}
+      - DEFAULT_READONLY_KEY=${LOGS_DEFAULT_READONLY_KEY}
+      - DEFAULT_WRITEONLY_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - LIFETIME_DAYS_DEBUG=${LOGS_LIFETIME_DAYS_DEBUG}
+      - LIFETIME_DAYS_INFO=${LOGS_LIFETIME_DAYS_INFO}
+      - LIFETIME_DAYS_WARNING=${LOGS_LIFETIME_DAYS_WARNING}
+      - LIFETIME_DAYS_ERROR=${LOGS_LIFETIME_DAYS_ERROR}
+      - LIFETIME_DAYS_CRITICAL=${LOGS_LIFETIME_DAYS_CRITICAL}
+    command: "yarn run prod"
+
+  twitter-bot:
+    image: twitter-bot/twitter-bot
+    build: twitter-bot
+    container_name: twitter-bot
+    networks:
+      - app_network
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./twitter-bot/src:/usr/app/src:rw
+      - ./twitter-bot/static:/usr/app/static:rw
+    environment:
+      - MONGO_URI=${MONGO_URI_BOT}
+      - LOGS_APP_ID=${LOGS_APP_ID}
+      - LOGS_API_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
+      - LOGS_URI=http://${LOGS_CONTAINER_NAME}:8080
+      - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
+      - APP_PORT=8080
+    command: "yarn run prod"
+  
+  mongo:
+    image: mongo:latest
+    container_name: twitter-bot-db
+    ports:
+      - "27017:27017"
+    networks:
+      - app_network
+    # environment:
+      # - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
+      # - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    command: "--quiet --logpath=/dev/null"
+    volumes:
+      - ./mongodata:/data/db:rw
+
+networks:
+  app_network:
+    driver: bridge
