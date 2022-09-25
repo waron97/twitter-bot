@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { getLogs } from '../../../_shared/api'
 import { useAuth } from '../../../_shared/stores'
@@ -11,24 +11,41 @@ export default function useLogs() {
     const [defaultSince] = useState(dayjs().subtract(5, 'minutes'))
     const { apiKey } = useAuth()
 
+    const intervalRef = useRef(null)
+
     useEffect(() => {
         if (!apiKey) {
             return
         }
 
-        const interval = setInterval(async () => {
-            const since = logs?.length
-                ? dayjs(logs[0].date).toISOString()
-                : defaultSince.toISOString()
-            const newLogs = await getLogs({ since }, apiKey)
+        async function setup() {
+            if (!logs || !logs.length) {
+                setLogs(
+                    (
+                        await getLogs(
+                            { since: defaultSince.toISOString() },
+                            apiKey
+                        )
+                    ).data
+                )
+            } else {
+                intervalRef.current = setInterval(async () => {
+                    const since = logs?.length
+                        ? dayjs(logs[0].date).toISOString()
+                        : defaultSince.toISOString()
+                    const newLogs = await getLogs({ since }, apiKey)
 
-            if (newLogs?.data?.length) {
-                setLogs([...newLogs.data, ...logs])
+                    if (newLogs?.data?.length) {
+                        setLogs([...newLogs.data, ...logs])
+                    }
+                }, seconds(5))
             }
-        }, seconds(5))
+        }
+
+        setup()
 
         return () => {
-            clearInterval(interval)
+            intervalRef.current && clearInterval(intervalRef.current)
         }
     }, [logs, apiKey])
 

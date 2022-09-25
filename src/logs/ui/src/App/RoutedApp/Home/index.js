@@ -83,7 +83,6 @@ const Home = styled(_Home)`
         .terminal-wrapper {
             width: 70%;
             flex: 1;
-            min-height: 0;
 
             display: flex;
             flex-direction: column;

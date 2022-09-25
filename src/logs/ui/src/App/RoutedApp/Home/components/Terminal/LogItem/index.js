@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'styled-components'
@@ -9,7 +10,9 @@ function _LogItem(props) {
     // Props destructuring
     // -------------------------------------
 
-    const { className, log } = props
+    const { className, log, onClick } = props
+
+    const { location, message, level, date, isFirstBatch } = log
 
     // -------------------------------------
     // Hooks (e.g. useState, ...)
@@ -27,11 +30,42 @@ function _LogItem(props) {
     // Component functions
     // -------------------------------------
 
+    function getColor() {
+        switch (level) {
+            case 'debug':
+                return '#B0DDFF'
+            case 'info':
+                return '#3BABFF'
+            case 'warning':
+                return '#FFC13B'
+            case 'error':
+                return '#FD572A'
+            case 'critical':
+                return '#FF0000'
+            default:
+                return 'white'
+        }
+    }
+
     // -------------------------------------
     // Component local variables
     // -------------------------------------
 
-    return <div className={`${className}`}>LogItem works!</div>
+    return (
+        <div
+            onClick={onClick}
+            className={`${className} ${isFirstBatch ? '' : 'fade-in'}`}
+        >
+            <span className="date">{dayjs(date).format('HH:mm')}</span>
+            <span style={{ color: getColor() }} className="level">
+                {level}
+            </span>
+            <span className="location text-ellipsis overflow-hidden whitespace-nowrap">
+                {location}
+            </span>
+            <span className="message">{message}</span>
+        </div>
+    )
 }
 
 // ----------------------------------------------------------------------------
@@ -48,6 +82,50 @@ _LogItem.defaultProps = {}
 
 const LogItem = styled(_LogItem)`
     & {
+        font-family: JetBrains;
+        color: white;
+
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        overflow: hidden;
+
+        transform: scale(0%);
+
+        > span {
+            display: block;
+            font-size: 11px;
+        }
+
+        .date {
+            width: 40px;
+        }
+
+        .level {
+            width: 60px;
+            font-weight: 700;
+        }
+
+        .location {
+            width: 100px;
+        }
+
+        .message {
+            flex: 1;
+        }
+
+        &.fade-in {
+            animation: fadein 200ms 1 forwards linear;
+        }
+
+        @keyframes fadein {
+            0% {
+                transform: scale(0%);
+            }
+            100% {
+                transform: scale(100%);
+            }
+        }
     }
 `
 // ----------------------------------------------------------------------------

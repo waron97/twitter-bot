@@ -18,6 +18,45 @@ export function getApiUrl(endpoint, params) {
 }
 
 export function getLogs(params, apiKey) {
+    // return {
+    //     data: [
+    //         {
+    //             _id: Math.random().toString(),
+    //             level: 'debug',
+    //             location: 'r1',
+    //             message: 'Random 1',
+    //             date: dayjs().toISOString(),
+    //         },
+    //         {
+    //             _id: Math.random().toString(),
+    //             level: 'info',
+    //             location: 'r1',
+    //             message: 'Random 2',
+    //             date: dayjs().toISOString(),
+    //         },
+    //         {
+    //             _id: Math.random().toString(),
+    //             level: 'warning',
+    //             location: 'r1',
+    //             message: 'Random 3',
+    //             date: dayjs().toISOString(),
+    //         },
+    //         {
+    //             _id: Math.random().toString(),
+    //             level: 'error',
+    //             location: 'r1',
+    //             message: 'Random 4',
+    //             date: dayjs().toISOString(),
+    //         },
+    //         {
+    //             _id: Math.random().toString(),
+    //             level: 'critical',
+    //             location: 'r2',
+    //             message: 'Random 5',
+    //             date: dayjs().toISOString(),
+    //         },
+    //     ],
+    // }
     const url = getApiUrl('/logs', { ...params })
     return sendRequest(url, 'GET', null, apiKey)
 }
