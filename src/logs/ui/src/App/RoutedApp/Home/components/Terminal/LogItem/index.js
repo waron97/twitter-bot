@@ -54,7 +54,9 @@ function _LogItem(props) {
     return (
         <div
             onClick={onClick}
-            className={`${className} ${isFirstBatch ? '' : 'fade-in'}`}
+            className={`${className} ${
+                isFirstBatch ? 'first-batch' : 'fade-in'
+            }`}
         >
             <span className="date">{dayjs(date).format('HH:mm')}</span>
             <span style={{ color: getColor() }} className="level">
@@ -116,6 +118,10 @@ const LogItem = styled(_LogItem)`
 
         &.fade-in {
             animation: fadein 200ms 1 forwards linear;
+        }
+
+        &.first-batch {
+            transform: scale(100%);
         }
 
         @keyframes fadein {

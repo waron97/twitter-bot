@@ -1,5 +1,5 @@
 export const processLogFilters = (params: any) => {
-  const { since, appId, levels } = params;
+  const { since, appId, levels, text } = params;
   const filters: { [key: string]: any } = {};
 
   if (since) {
@@ -14,6 +14,13 @@ export const processLogFilters = (params: any) => {
 
   if (levels && levels.length) {
     filters.level = { $in: levels };
+  }
+
+  if (text) {
+    filters.$or = [
+      { location: { $regex: text, $options: 'im' } },
+      { message: { $regex: text, $options: 'im' } },
+    ];
   }
 
   return filters;

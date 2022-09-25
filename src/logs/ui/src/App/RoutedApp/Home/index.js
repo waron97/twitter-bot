@@ -21,10 +21,10 @@ function _Home(props) {
 
     const [filters, setFilters] = useState({
         appId: undefined,
-        levels: Object.values(LogLevels),
+        levels: LogLevels.map((l) => l.value),
     })
 
-    const logs = useLogs(filters)
+    const [logs, loadNextPage] = useLogs(filters)
 
     // -------------------------------------
     // Memoized values
@@ -54,7 +54,7 @@ function _Home(props) {
             <div className="terminal-wrapper">
                 <Filters values={filters} onChange={handleChange} />
                 <div className="terminal-wrapper-inner">
-                    <Terminal logs={logs} />
+                    <Terminal logs={logs} loadNextPage={loadNextPage} />
                 </div>
             </div>
         </div>

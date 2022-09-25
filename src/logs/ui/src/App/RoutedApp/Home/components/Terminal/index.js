@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { useEffect, useRef, useState } from 'react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components'
 
 import LogItem from './LogItem'
@@ -11,7 +12,7 @@ function _Terminal(props) {
     // Props destructuring
     // -------------------------------------
 
-    const { className, logs } = props
+    const { className, logs, loadNextPage } = props
 
     // -------------------------------------
     // Hooks (e.g. useState, ...)
@@ -20,7 +21,10 @@ function _Terminal(props) {
     const scrollRef = useRef(null)
     const logsWrapperRef = useRef(null)
 
-    useScrollHandler(scrollRef, logsWrapperRef)
+    useScrollHandler({
+        scrollRef,
+        logsWrapperRef,
+    })
 
     // -------------------------------------
     // Memoized values
@@ -39,17 +43,39 @@ function _Terminal(props) {
     // -------------------------------------
 
     return (
-        <div ref={scrollRef} className={`${className}`}>
-            <div ref={logsWrapperRef} className="logs-wrapper">
-                {logs?.map((log) => {
-                    return (
-                        <div key={log._id}>
-                            <LogItem log={log} />
-                            <div className="logs-sep" />
-                        </div>
-                    )
-                })}
-            </div>
+        <div
+            ref={scrollRef}
+            id="scrollTarget"
+            className={`${className}`}
+            style={{
+                overflow: 'auto',
+                display: 'flex',
+                flexDirection: 'column-reverse',
+            }}
+        >
+            <InfiniteScroll
+                inverse
+                hasMore
+                next={loadNextPage}
+                dataLength={logs?.length}
+                style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column-reverse',
+                }}
+                scrollableTarget={'scrollTarget'}
+            >
+                <div ref={logsWrapperRef} className="logs-wrapper">
+                    {logs?.map((log) => {
+                        return (
+                            <div key={log._id}>
+                                <LogItem log={log} />
+                                <div className="logs-sep" />
+                            </div>
+                        )
+                    })}
+                </div>
+            </InfiniteScroll>
         </div>
     )
 }
@@ -103,8 +129,18 @@ const Terminal = styled(_Terminal)`
 
 export default Terminal
 
-const useScrollHandler = (scrollRef, logsWrapperRef) => {
+const useScrollHandler = ({ scrollRef, logsWrapperRef }) => {
     const [userScrolledToBottom, setUserScrolledToBottom] = useState(true)
+
+    useEffect(() => {
+        /** @type {HTMLDivElement} */
+        const scrollContainer = scrollRef.current
+        scrollContainer.scrollTo({
+            top: scrollContainer.scrollHeight,
+            left: 0,
+            behavior: 'auto',
+        })
+    }, [])
 
     useEffect(() => {
         /** @type {HTMLDivElement} */
@@ -113,12 +149,6 @@ const useScrollHandler = (scrollRef, logsWrapperRef) => {
         const logsContainer = logsWrapperRef.current
 
         if (!scrollContainer || !logsContainer) return
-
-        scrollContainer.scrollTo({
-            top: scrollContainer.scrollHeight,
-            left: 0,
-            behavior: 'auto',
-        })
 
         function onWrapperResize() {
             if (userScrolledToBottom) {
@@ -134,6 +164,13 @@ const useScrollHandler = (scrollRef, logsWrapperRef) => {
         function onContainerScroll() {
             const { clientHeight, scrollHeight, scrollTop } = scrollContainer
 
+            // console.log(
+            //     scrollTop + clientHeight + 1,
+            //     scrollHeight,
+            //     scrollTop + clientHeight + 1 >= scrollHeight
+            // )
+
+            // Save if user has scrolled to the bottom of the terminal
             // this +1 fixes some weird edge-case where sometimes the LHS resolves to RHS-0.5
             if (scrollTop + clientHeight + 1 >= scrollHeight) {
                 // console.log('User scrolled to bottom of container')

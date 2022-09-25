@@ -54,16 +54,16 @@ function _Filters(props) {
     // Component local variables
     // -------------------------------------
 
-    const labelClass = 'block font-medium'
+    const labelClass = 'block'
     const inputClass = 'block'
 
     return (
         <div
             className={`${className} flex flex-col items-start flex-wrap gap-4`}
         >
-            <div className="flex flex-row items-center justify-between w-full gap-5">
+            <div className="flex flex-row items-center justify-between w-full gap-3">
                 <label className={`${labelClass} flex-1`}>
-                    Applicazione
+                    <span className="font-medium">Applicazione</span>
                     <Select
                         className={`${inputClass} w-full`}
                         options={appIds.map((appId) => ({
@@ -75,16 +75,26 @@ function _Filters(props) {
                     />
                 </label>
                 <label className={`${labelClass} flex-1`}>
-                    Ricerca testo
+                    <span className="font-medium">Ricerca testo</span>
                     <Input
                         className={`${inputClass} w-full`}
                         value={values.text}
                         onChange={onChange('text')}
                     />
                 </label>
+                {/* <label className={`${labelClass} flex-1`}>
+                    <span className="font-medium">A partire da</span>
+                    <DatePicker
+                        className={`${inputClass} w-full`}
+                        value={values?.since ? moment(values.since) : null}
+                        onChange={(v) => onChange('since')(v)}
+                        showTime
+                        format={'D MMM - HH:mm'}
+                    />
+                </label> */}
             </div>
-            <label className="block w-full font-medium">
-                Livelli
+            <label className="block w-full">
+                <span className="font-medium">Livelli</span>
                 <Select
                     className={`${inputClass} w-full`}
                     options={LogLevels}

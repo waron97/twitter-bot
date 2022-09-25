@@ -14,7 +14,7 @@ export const paginated =
       pagination: {
         page,
         pageSize,
-        maxPages: Math.ceil(size / pageSize),
+        maxPages: Math.ceil(size / pageSize) || 1,
         resultCount: size,
       },
     });
