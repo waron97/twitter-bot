@@ -20,7 +20,7 @@ services:
       - LOGS_APP_ID=twitter-bot
       - APP_PORT=8080
       - API_KEY=${LOGS_API_KEY}
-    command: "yarn run dev"
+    command: "yarn run prod"
 
   twitter-bot:
     image: twitter-bot/twitter-bot

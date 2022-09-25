@@ -24,4 +24,6 @@ RUN yarn run build
 
 WORKDIR /usr/app
 
+RUN yarn run build
+
 CMD [ "yarn", "run", "dev" ]
