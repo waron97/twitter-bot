@@ -1,0 +1,10 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "universe/web"
+    ],
+    "rules": {
+        "no-console": "warn"
+    }
+}
