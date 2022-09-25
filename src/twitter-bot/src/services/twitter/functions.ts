@@ -166,7 +166,7 @@ const getTweetList: (
   if (lastFetchedTweet) {
     query.since_id = lastFetchedTweet.tweetId;
   } else {
-    query.start_time = dayjs().subtract(5, 'day').toISOString();
+    query.start_time = dayjs().subtract(1, 'day').toISOString();
   }
 
   if (nextToken) {
