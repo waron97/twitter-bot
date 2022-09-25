@@ -6,6 +6,7 @@
             "jsx": true
         }
     },
+    "env": { "browser": true },
     "rules": {
         "no-console": "warn",
         "react/prop-types": "warn",

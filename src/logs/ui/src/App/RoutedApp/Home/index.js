@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import Filters from './components/Filters'
+import Filters, { LogLevels } from './components/Filters'
 import Terminal from './components/Terminal'
 import useLogs from './hooks/useLogs'
 
@@ -19,7 +19,10 @@ function _Home(props) {
     // Hooks (e.g. useState, ...)
     // -------------------------------------
 
-    const [filters, setFilters] = useState({ appId: 'twitter-bot' })
+    const [filters, setFilters] = useState({
+        appId: undefined,
+        levels: Object.values(LogLevels),
+    })
 
     const logs = useLogs(filters)
 
@@ -50,7 +53,9 @@ function _Home(props) {
         <div className={`${className}`}>
             <div className="terminal-wrapper">
                 <Filters values={filters} onChange={handleChange} />
-                <Terminal logs={logs} />
+                <div className="terminal-wrapper-inner">
+                    <Terminal logs={logs} />
+                </div>
             </div>
         </div>
     )
@@ -83,6 +88,13 @@ const Home = styled(_Home)`
             display: flex;
             flex-direction: column;
             position: relative;
+
+            .terminal-wrapper-inner {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+            }
         }
     }
 `

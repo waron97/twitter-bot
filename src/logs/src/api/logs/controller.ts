@@ -48,6 +48,8 @@ export const getAppIds: RequestHandler = async (req, res, next) => {
       }
     }
 
+    req.registerCachedContent?.(ids);
+
     res.send(ids);
   } catch (e) {
     next(e);

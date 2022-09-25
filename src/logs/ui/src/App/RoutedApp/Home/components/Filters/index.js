@@ -1,8 +1,21 @@
+import { Input, Select } from 'antd'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useQuery } from 'react-query'
 import styled from 'styled-components'
 
+import { getAppIds } from '../../../../_shared/api'
+import { useAuth } from '../../../../_shared/stores'
+
 // ----------------------------------------------------------------------------
+
+export const LogLevels = [
+    { label: 'Debug', value: 'debug' },
+    { label: 'Info', value: 'info' },
+    { label: 'Warning', value: 'warning' },
+    { label: 'Error', value: 'error' },
+    { label: 'Critical', value: 'critical' },
+]
 
 function _Filters(props) {
     // -------------------------------------
@@ -15,6 +28,10 @@ function _Filters(props) {
     // Hooks (e.g. useState, ...)
     // -------------------------------------
 
+    const { apiKey } = useAuth()
+
+    const { data: appIds = [] } = useQuery('app-ids', () => getAppIds(apiKey))
+
     // -------------------------------------
     // Memoized values
     // -------------------------------------
@@ -22,6 +39,12 @@ function _Filters(props) {
     // -------------------------------------
     // Effects
     // -------------------------------------
+
+    useEffect(() => {
+        if (!values.appId && appIds?.[0]) {
+            onChange('appId')(appIds[0])
+        }
+    }, [appIds])
 
     // -------------------------------------
     // Component functions
@@ -31,7 +54,47 @@ function _Filters(props) {
     // Component local variables
     // -------------------------------------
 
-    return <div className={`${className}`}></div>
+    const labelClass = 'block font-medium'
+    const inputClass = 'block'
+
+    return (
+        <div
+            className={`${className} flex flex-col items-start flex-wrap gap-4`}
+        >
+            <div className="flex flex-row items-center justify-between w-full gap-5">
+                <label className={`${labelClass} flex-1`}>
+                    Applicazione
+                    <Select
+                        className={`${inputClass} w-full`}
+                        options={appIds.map((appId) => ({
+                            label: appId,
+                            value: appId,
+                        }))}
+                        value={values.appId}
+                        onChange={onChange('appId')}
+                    />
+                </label>
+                <label className={`${labelClass} flex-1`}>
+                    Ricerca testo
+                    <Input
+                        className={`${inputClass} w-full`}
+                        value={values.text}
+                        onChange={onChange('text')}
+                    />
+                </label>
+            </div>
+            <label className="block w-full font-medium">
+                Livelli
+                <Select
+                    className={`${inputClass} w-full`}
+                    options={LogLevels}
+                    value={values.levels}
+                    onChange={onChange('levels')}
+                    mode="multiple"
+                />
+            </label>
+        </div>
+    )
 }
 
 // ----------------------------------------------------------------------------
@@ -49,10 +112,10 @@ _Filters.defaultProps = {}
 const Filters = styled(_Filters)`
     & {
         width: 100%;
-        height: 30px;
+        /* height: 50px; */
         border-bottom: 1px solid #c1c1c1;
-        display: flex;
-        align-items: center;
+        background: white;
+        padding: 10px 15px;
 
         .app-id {
         }

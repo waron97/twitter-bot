@@ -1,18 +1,15 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import styled from 'styled-components'
-
-import RoutedApp from './RoutedApp'
-
-const client = new QueryClient()
 
 // ----------------------------------------------------------------------------
 
-function _App() {
+function _LogItem(props) {
     // -------------------------------------
     // Props destructuring
     // -------------------------------------
+
+    const { className, log } = props
 
     // -------------------------------------
     // Hooks (e.g. useState, ...)
@@ -34,29 +31,25 @@ function _App() {
     // Component local variables
     // -------------------------------------
 
-    return (
-        <QueryClientProvider client={client}>
-            <RoutedApp />
-        </QueryClientProvider>
-    )
+    return <div className={`${className}`}>LogItem works!</div>
 }
 
 // ----------------------------------------------------------------------------
 // Component PropTypes and default props
 // ----------------------------------------------------------------------------
 
-_App.propTypes = {
+_LogItem.propTypes = {
     className: PropTypes.string.isRequired,
 }
 
-_App.defaultProps = {}
+_LogItem.defaultProps = {}
 
 // ----------------------------------------------------------------------------
 
-const App = styled(_App)`
+const LogItem = styled(_LogItem)`
     & {
     }
 `
 // ----------------------------------------------------------------------------
 
-export default App
+export default LogItem

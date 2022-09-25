@@ -11,6 +11,7 @@ declare module 'express-serve-static-core' {
       displayName: string;
       id: string;
     };
+    registerCachedContent?: (content) => void;
   }
 }
 

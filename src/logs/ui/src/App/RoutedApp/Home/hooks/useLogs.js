@@ -8,7 +8,7 @@ const seconds = (n) => n * 1000
 
 export default function useLogs() {
     const [logs, setLogs] = useState([])
-    const [defaultSince] = useState(dayjs())
+    const [defaultSince] = useState(dayjs().subtract(5, 'minutes'))
     const { apiKey } = useAuth()
 
     useEffect(() => {

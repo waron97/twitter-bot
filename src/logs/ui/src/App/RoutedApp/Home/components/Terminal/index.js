@@ -2,6 +2,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'styled-components'
 
+import LogItem from './LogItem'
+
 // ----------------------------------------------------------------------------
 
 function _Terminal(props) {
@@ -33,7 +35,11 @@ function _Terminal(props) {
 
     return (
         <div className={`${className}`}>
-            <div className="logs-wrapper"></div>
+            <div className="logs-wrapper">
+                {logs?.map((log) => {
+                    return <LogItem key={log.id} log={log} />
+                })}
+            </div>
         </div>
     )
 }
@@ -52,13 +58,12 @@ _Terminal.defaultProps = {}
 
 const Terminal = styled(_Terminal)`
     & {
-        margin-top: 12px;
         flex: 1;
         min-height: 0;
         display: flex;
 
         position: absolute;
-        top: 30px;
+        top: 0;
         bottom: 0;
         left: 0;
         right: 0;
@@ -70,7 +75,7 @@ const Terminal = styled(_Terminal)`
         .logs-wrapper {
             height: 1200px;
             width: 100%;
-            background: rgba(20, 100, 60, 0.2);
+            background: #212121;
         }
     }
 `
