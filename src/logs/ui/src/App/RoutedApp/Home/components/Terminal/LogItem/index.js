@@ -110,6 +110,7 @@ const LogItem = styled(_LogItem)`
 
         .location {
             width: 100px;
+            color: #abff40;
         }
 
         .message {
