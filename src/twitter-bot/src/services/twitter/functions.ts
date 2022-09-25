@@ -9,6 +9,7 @@ import FetchInstruction, {
 import Tweet from '../../api/tweets/model';
 import appEnv from '../../constants/env';
 import Logger from '../logs';
+import { sleep } from '../util';
 import { accounts } from './constants';
 
 interface TwitterParams {
@@ -17,6 +18,7 @@ interface TwitterParams {
   query?: string;
   'tweet.fields'?: string;
   next_token?: string;
+  max_results?: number;
 }
 
 type ApiTweet = { created_at: string; id: string; text: string };
@@ -54,6 +56,8 @@ export const getRecentTweets = async () => {
   );
   for (const split of splits) {
     await getAccountSplitTweets(split, lastFetchedTweet);
+    // have to sleep in between batches to not exceed rate limits
+    await sleep(15, 'minutes');
   }
   Logger.info(`getRecentTweets`, 'Execution finished for function');
 };
@@ -78,11 +82,6 @@ const getAccountSplitTweets = async (
       meta: data?.meta,
       data: data?.data ?? [],
     };
-    Logger.debug(
-      'getAccountSplitTweets',
-      'Twitter responded to first page fetch',
-      response
-    );
   } catch {
     // error already logged
     return;
@@ -187,6 +186,7 @@ const getTweetList: (
   const query: TwitterParams = {
     'tweet.fields': 'created_at',
     query: `${accounts}  -is:reply -is:retweet -is:quote`,
+    max_results: 100,
   };
 
   if (lastFetchedTweet) {
@@ -210,6 +210,10 @@ const getTweetList: (
 
   try {
     const { data } = await axios(requestParams);
+    Logger.debug('getTweetList', 'Tweet list download successful', {
+      request: requestParams,
+      response: data,
+    });
     return data;
   } catch (e) {
     Logger.error('getTweetList', 'Failed to download tweet list', {
@@ -232,7 +236,7 @@ const getAccountQuerySplits = () => {
       0
     );
     if (splitLength < 300) {
-      currentSplit.push(account);
+      currentSplit.push(`from:${account}`);
     } else {
       splits.push(currentSplit.join(' OR '));
       currentSplit = [account];
