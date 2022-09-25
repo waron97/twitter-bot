@@ -104,7 +104,6 @@ export const accounts = [
   'vineapp',
   'Visually',
   'Webroot',
-  'Inc.',
   'wolters_kluwer',
   'zaarly',
   'Zendesk',
