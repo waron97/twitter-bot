@@ -53,7 +53,8 @@ export default function useLogs(filters) {
                 setPagination(pagination)
             } else {
                 intervalRef.current = setInterval(async () => {
-                    const since = moment(logs[0].date).toISOString()
+                    const since =
+                        logs?.[0] && moment(logs[0].date).toISOString()
                     const newLogs = await getLogs({ ...filters, since }, apiKey)
                     if (newLogs?.data?.length) {
                         setLogs(dedupe([...newLogs.data, ...logs]))
