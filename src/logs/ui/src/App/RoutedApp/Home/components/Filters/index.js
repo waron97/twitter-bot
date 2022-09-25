@@ -30,7 +30,11 @@ function _Filters(props) {
 
     const { apiKey } = useAuth()
 
-    const { data: appIds = [] } = useQuery('app-ids', () => getAppIds(apiKey))
+    const { data: appIds = [] } = useQuery(
+        ['app-ids', apiKey],
+        () => getAppIds(apiKey),
+        { enabled: !!apiKey }
+    )
 
     // -------------------------------------
     // Memoized values

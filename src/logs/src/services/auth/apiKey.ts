@@ -1,26 +1,38 @@
 import { RequestHandler } from 'express';
 
-import appEnv from '../../constants/env';
+import Key, { KeyType } from '../../api/keys/model';
 
-export const apiKey: () => RequestHandler = () => (req, res, next) => {
-  const { authorization } = req.headers;
+interface Params {
+  types: KeyType[];
+}
 
-  const authFail = () =>
-    res.status(401).json({
-      error: 'INVALID_API_KEY',
-      message: 'No API key or invalid API key provided.',
-    });
+export const apiKey: (params?: Params) => RequestHandler =
+  (params) => async (req, res, next) => {
+    const { authorization } = req.headers;
 
-  if (!authorization) {
-    authFail();
-    return;
-  }
+    const types = params?.types ?? ['admin', 'readonly', 'writeonly'];
 
-  const apiKey = authorization?.split?.('apiKey ')?.[1];
+    const authFail = () =>
+      res.status(401).json({
+        error: 'INVALID_API_KEY',
+        message: 'No API key or invalid API key provided.',
+      });
 
-  if (apiKey && apiKey === appEnv.apiKey) {
-    next();
-  } else {
-    authFail();
-  }
-};
+    if (!authorization) {
+      authFail();
+      return;
+    }
+
+    const apiKey = authorization?.split?.('apiKey ')?.[1];
+
+    if (apiKey) {
+      const key = await Key.findOne({ key: apiKey });
+      if (key && types.includes(key.type)) {
+        next();
+      } else {
+        authFail();
+      }
+    } else {
+      authFail();
+    }
+  };

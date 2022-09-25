@@ -4,10 +4,13 @@ import * as express from 'express';
 import mongoose from 'mongoose';
 
 import appRouter from './api';
+import { createDefaultKeys } from './api/keys/service';
 import appEnv from './constants/env';
 import { mongoUri } from './constants/mongo';
 
-mongoose.connect(mongoUri);
+mongoose.connect(mongoUri).then(() => {
+  createDefaultKeys();
+});
 
 const app = express();
 

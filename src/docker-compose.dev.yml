@@ -13,13 +13,11 @@ services:
       - ./logs/src:/usr/app/src:rw
       - ./logs/static:/usr/app/static:rw
     environment:
-      - MONGO_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
-      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
-      - MONGO_DB_NAME=logs-dev
-      - MONGO_CONTAINER_NAME=twitter-bot-db
-      - LOGS_APP_ID=twitter-bot
+      - MONGO_URI=${MONGO_URI}
       - APP_PORT=8080
-      - API_KEY=${LOGS_API_KEY}
+      - DEFAULT_ADMIN_KEY=${LOGS_DEFAULT_ADMIN_KEY}
+      - DEFAULT_READONLY_KEY=${LOGS_DEFAULT_READONLY_KEY}
+      - DEFAULT_WRITEONLY_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
     command: "yarn run dev"
 
   twitter-bot:
@@ -34,15 +32,12 @@ services:
       - ./twitter-bot/src:/usr/app/src:rw
       - ./twitter-bot/static:/usr/app/static:rw
     environment:
-      - MONGO_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
-      - MONGO_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
-      - MONGO_DB_NAME=twitter-bot-db-dev
-      - MONGO_CONTAINER_NAME=twitter-bot-db
-      - LOGS_APP_ID=twitter-bot
-      - APP_PORT=8080
-      - LOGS_API_KEY=${LOGS_API_KEY}
+      - MONGO_URI=${MONGO_URI}
+      - LOGS_APP_ID=${LOGS_APP_ID}
+      - LOGS_API_KEY=${LOGS_DEFAULT_WRITEONLY_KEY}
       - LOGS_URI=http://${LOGS_CONTAINER_NAME}:8080
       - TWITTER_BEARER_TOKEN=${TWITTER_BEARER_TOKEN}
+      - APP_PORT=8080
     command: "yarn run dev"
   
   mongo:

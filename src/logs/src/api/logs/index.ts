@@ -8,10 +8,10 @@ import { validate } from './validate';
 
 const router = Router();
 
-router.get('/', apiKey(), pagination(), index);
+router.get('/', apiKey({ types: ['readonly', 'admin'] }), pagination(), index);
 
-router.get('/app-ids', apiKey(), mcache(5), getAppIds);
+router.get('/app-ids', apiKey({ types: ['admin'] }), mcache(5), getAppIds);
 
-router.post('/', apiKey(), validate, create);
+router.post('/', apiKey({ types: ['admin', 'writeonly'] }), validate, create);
 
 export default router;
