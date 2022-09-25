@@ -11,8 +11,8 @@ export const mcache = (duration: number) => {
       req.registerCachedContent = (content) => {
         cachehandler.put(key, content, duration * 1000);
       };
+      next();
     }
-    next();
   };
 
   return middleware;
