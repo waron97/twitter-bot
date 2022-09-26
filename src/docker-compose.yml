@@ -52,9 +52,9 @@ services:
       - "27017:27017"
     networks:
       - app_network
-    # environment:
-      # - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
-      # - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
     command: "--quiet --logpath=/dev/null"
     volumes:
       - ./mongodata:/data/db:rw
