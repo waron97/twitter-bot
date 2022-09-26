@@ -189,7 +189,7 @@ const getTweetList: (
 ) => {
   const query: TwitterParams = {
     'tweet.fields': 'created_at',
-    query: `(${accounts}) AND  -is:reply AND -is:retweet AND -is:quote`,
+    query: `(${accounts})  -is:reply -is:retweet -is:quote`,
     max_results: 100,
   };
 
