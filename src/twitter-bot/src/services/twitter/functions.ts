@@ -102,7 +102,7 @@ const getAccountSplitTweets = async (
         nextToken
       );
       nextPageData?.data?.forEach((tweet) => items.push(tweet));
-      nextToken = nextPageData.meta.next_token;
+      nextToken = nextPageData?.meta?.next_token;
     } catch {
       // error already logged
       return;
