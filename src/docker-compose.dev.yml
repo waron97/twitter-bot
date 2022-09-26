@@ -5,6 +5,8 @@ services:
     image: twitter-bot/logs
     build: logs
     container_name: ${LOGS_CONTAINER_NAME}
+    depends_on:
+      - mongo
     networks:
       - app_network
     ports:
@@ -29,6 +31,8 @@ services:
     image: twitter-bot/twitter-bot
     build: twitter-bot
     container_name: twitter-bot
+    depends_on:
+      - mongo
     networks:
       - app_network
     ports:
