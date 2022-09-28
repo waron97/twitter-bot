@@ -1,4 +1,5 @@
 .env
 mongodata
 keys.txt
+keys
 mongodata-v2
