@@ -264,10 +264,20 @@ const getTweetDetail = async (tweetId: string) => {
 
   try {
     const { data } = await axios(requestParams);
+
     Logger.debug('getTweetDetail', `Downloaded tweet data for ${tweetId}`, {
       request: requestParams,
       respinse: data,
     });
+
+    if (!data?.data?.id) {
+      Logger.warning(
+        'getTweetDetail',
+        'Edge case: downlaoded tweet has no id',
+        { request: requestParams, response: data }
+      );
+    }
+
     return data?.data;
   } catch (e) {
     Logger.error('getTweetDetail', 'Failed to get tweet detail', {
