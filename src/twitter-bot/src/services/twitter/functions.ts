@@ -132,7 +132,11 @@ const getAccountSplitTweets = async (
 };
 
 export const executeTweetFetch = async () => {
-  await FetchInstruction.find({ done: false })
+  const now = dayjs();
+  await FetchInstruction.find({
+    done: false,
+    fetchDate: { $lte: now.add(10, 'minutes').toDate() },
+  })
     .cursor()
     .eachAsync(async (instruction) => {
       const { fetchDate, tweetId } = instruction;
@@ -175,6 +179,9 @@ export const executeTweetFetch = async () => {
           { error: e, body: tweetBody }
         );
       }
+    })
+    .catch((e) => {
+      Logger.error('executeTweetFetch', 'Generic catch occurred', e);
     });
 };
 
