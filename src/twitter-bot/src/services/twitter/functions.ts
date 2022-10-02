@@ -135,7 +135,7 @@ export const executeTweetFetch = async () => {
   const now = dayjs();
   await FetchInstruction.find({
     done: false,
-    fetchDate: { $lte: now.add(10, 'minutes').toDate() },
+    fetchDate: { $gte: now.subtract(10, 'minutes').toDate() },
   })
     .cursor()
     .eachAsync(async (instruction) => {
